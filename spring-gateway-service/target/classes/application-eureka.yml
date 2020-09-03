@@ -1,0 +1,48 @@
+user-security:
+  name: admin #需要注册的注册中心的security的账户
+  passwd: 123456 #需要注册的注册中心security的密码
+  hostname: localhost #需要注册的注册中心服务部署的路径
+  port1: 7002 #需要注册的注册中心的端口号
+  port2: 7003 #需要注册的注册中心的端口号
+
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能
+          lower-case-service-id: true #使用小写服务名，默认是大写
+      routes:
+        - id : prefixpath_route
+          uri: lb://hystrix-service #此处需要使用lb协议
+          predicates:
+            - Method=GET
+          filters:
+            - PrefixPath=/Hystrix
+        - id: hystrix_route
+          uri: lb://feign-service
+          predicates:
+            - Path=/feign/**
+            - Method=GET
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: forward:/fallback
+
+eureka:
+  client:
+    register-with-eureka: true #指定是否要注册到注册中心（允许注册到注册中心）
+    fetch-registry: true #指定是否要从注册中心获取服务（允许获取服务）
+    service-url:
+      defaultZone: http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port1}/eureka/,http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port1}/eureka/
+    registry-fetch-interval-seconds: 3 #定义去eureka服务端获取服务列表的时间间隔
+  instance:
+    lease-expiration-duration-in-seconds: 20
+    lease-renewal-interval-in-seconds: 5
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug

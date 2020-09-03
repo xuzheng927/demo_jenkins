@@ -1,0 +1,50 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: hystrix-service
+
+user-security:
+  name: admin #需要注册的注册中心的security的账户
+  passwd: 123456 #需要注册的注册中心security的密码
+  hostname: localhost #需要注册的注册中心服务部署的路径
+  port1: 7002 #需要注册的注册中心的端口号
+  port2: 7003 #需要注册的注册中心的端口号
+
+
+eureka:
+  client:
+    register-with-eureka: true #指定是否要注册到注册中心（允许注册到注册中心）
+    fetch-registry: true #指定是否要从注册中心获取服务（允许获取服务）
+    service-url:
+      defaultZone: http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port1}/eureka/,http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port1}/eureka/
+    registry-fetch-interval-seconds: 3 #定义去eureka服务端获取服务列表的时间间隔
+  instance:
+    lease-expiration-duration-in-seconds: 20
+    lease-renewal-interval-in-seconds: 5
+
+
+hystrix:
+  command: #用于控制HystrixCommand的行为
+    default:
+      execution:
+        isolation:
+          strategy: THREAD #控制HystrixCommand的隔离策略，THREAD->线程池隔离策略(默认)，SEMAPHORE->信号量隔离策略
+          thread:
+            timeoutInMilliseconds: 3000 #配置HystrixCommand执行的超时时间，执行超过该时间会进行服务降级处理
+            interruptOnTimeout: true #配置HystrixCommand执行超时的时候是否要中断
+            interruptOnCancel: true #配置HystrixCommand执行被取消的时候是否要中断
+          timeout:
+            enabled: true #配置HystrixCommand的执行是否启用超时时间
+          semaphore:
+            maxConcurrentRequests: 10 #当使用信号量隔离策略时，用来控制并发量的大小，超过该并发量的请求会被拒绝
+      fallback:
+        enabled: true #用于控制是否启用服务降级
+      circuitBreaker: #用于控制HystrixCircuitBreaker的行为
+        enabled: true #用于控制断路器是否跟踪健康状况以及熔断请求
+        requestVolumeThreshold: 10 #超过该请求数的请求会被拒绝
+        sleepWindowInMilliseconds: 10000
+        errorThresholdPercentage: 60
+      requestCache:
+        enabled: true #用于控制是否开启请求缓存

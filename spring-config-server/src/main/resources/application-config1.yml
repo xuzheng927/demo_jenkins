@@ -1,0 +1,38 @@
+server:
+  port: 7005
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+#        native:
+#          search-locations: classpath:/properties/test/
+          git: #配置存储配置信息的Git仓库
+            uri: https://github.com/xuzheng927/demo.git
+            username: xuzheng927
+            password: Xz15237368837.
+            clone-on-start: true #开启启动时直接从git获取配置
+  http:
+    encoding:
+      force: true #解决springCloud-config返回中文乱码
+
+user-security:
+  name: admin #需要注册的注册中心的security的账户
+  passwd: 123456 #需要注册的注册中心security的密码
+  hostname: localhost #需要注册的注册中心服务部署的路径
+  port1: 7002 #需要注册的注册中心的端口号
+  port2: 7003 #需要注册的注册中心的端口号
+
+
+eureka:
+  client:
+    register-with-eureka: true #指定是否要注册到注册中心（允许注册到注册中心）
+    fetch-registry: true #指定是否要从注册中心获取服务（允许获取服务）
+    service-url:
+      defaultZone: http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port1}/eureka/,http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port1}/eureka/
+    registry-fetch-interval-seconds: 3 #定义去eureka服务端获取服务列表的时间间隔
+  instance:
+    lease-expiration-duration-in-seconds: 20
+    lease-renewal-interval-in-seconds: 5

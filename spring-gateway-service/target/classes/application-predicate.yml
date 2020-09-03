@@ -1,0 +1,69 @@
+service-url:
+  user-service: http://localhost:8085
+  user-hystrix: http://localhost:8082
+
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: path_route #路由的ID
+          uri: ${service-url.user-service} #匹配后路由地址
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/feign/**/{a}
+        - id: after_route #路由的ID
+          uri: ${service-url.user-hystrix} #匹配后路由地址
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/Hystrix/**/{a}
+            - After=2020-06-18T14:54:10+08:00[Asia/Shanghai] #在指定时间之后的请求会匹配该路由。
+#        - id: before_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - Before=2020-06-18T15:00:10+08:00[Asia/Shanghai] #在指定时间之前的请求会匹配该路由
+#        - id: between_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - Between=2020-06-18T15:18:00+08:00[Asia/Shanghai],2020-06-18T15:19:10+08:00[Asia/Shanghai] #在指定时间区间内的请求会匹配该路由。
+#        - id: cookie_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#              - Path=/Hystrix/**/{a}
+#              - Cookie=username,test #带有指定Cookie的请求会匹配该路由
+#        - id: header_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - Header=X-Request-Id, \d+ #带有指定请求头的请求会匹配该路由。
+#        - id: host_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - Host=**.xz.com #带有指定Host的请求会匹配该路由
+#        - id: method_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - Method=Get #发送指定方法的请求会匹配该路由。
+#        - id: query_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - Query=a #发送指定方法的请求会匹配该路由。
+#        - id: remoteaddr_route #路由的ID
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates: # 断言，路径相匹配的进行路由
+#            - Path=/Hystrix/**/{a}
+#            - RemoteAddr=192.168.1.1/24 #从指定远程地址发起的请求可以匹配该路由
+#        - id: weight_high
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates:
+#            - Path=/Hystrix/HystrixTest1/{a}
+#            - Weight=group1, 8
+#        - id: weight_low
+#          uri: ${service-url.user-hystrix} #匹配后路由地址
+#          predicates:
+#            - Path=/Hystrix/HystrixTest2/{a}
+#            - Weight=group1, 2
+

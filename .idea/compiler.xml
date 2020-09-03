@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="spring-config-server" />
+        <module name="spring-nacos-ribbon" />
+        <module name="spring-hystrix-service" />
+        <module name="spring-erueka-consumer" />
+        <module name="spring-hystrix-dashboard" />
+        <module name="spring-eureka-client" />
+        <module name="spring-gateway-service" />
+        <module name="spring-config-client" />
+        <module name="spring-nacos-service" />
+        <module name="spring-nacos-config-client" />
+        <module name="spring-eureka-server" />
+        <module name="spring-feign-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-api-gateway" target="1.5" />
+      <module name="spring-cloud-consumer" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,8 @@
+server:
+  port: 7000
+
+spring:
+  profiles:
+    active: eureka
+  application:
+    name: api-gateway

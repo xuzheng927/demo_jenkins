@@ -1,0 +1,36 @@
+server:
+  port: 7002
+
+#指定服务名称
+spring:
+  application:
+    name: eureka-server
+  #引用security依赖时需要配置，反之不需要
+  security:
+    user:
+      name: admin
+      password: 123456
+
+user-security:
+  name: admin #需要注册的注册中心的security的账户
+  passwd: 123456 #需要注册的注册中心security的密码
+  hostname: localhost #需要注册的注册中心服务部署的路径
+  port: 7003 #需要注册的注册中心的端口号
+
+
+
+#指定服务地址
+eureka:
+  instance:
+    hostname: replica1
+    lease-expiration-duration-in-seconds: 20 #定义服务多久不去续约认为服务失效
+    lease-renewal-interval-in-seconds: 5 #定义服务多久去注册中心续约
+  client:
+    register-with-eureka: true #指定是否要注册到注册中心（允许注册到注册中心）
+    fetch-registry: true #指定是否要从注册中心获取服务（允许获取服务）
+    service-url:
+      defaultZone: http://${user-security.name}:${user-security.passwd}@${user-security.hostname}:${user-security.port}/eureka/ #指定注册中心地址
+    registry-fetch-interval-seconds: 5  #定义去eureka服务端获取服务列表的时间间隔
+  server:
+    enable-self-preservation: false #关闭保护模式
+    eviction-interval-timer-in-ms: 2000 #扫描失效服务
